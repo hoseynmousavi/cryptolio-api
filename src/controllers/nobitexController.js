@@ -26,8 +26,8 @@ function getUserExchangeDataRes(req, res)
                         {
                             const accountsArr = accountsTemp.wallets
                             const prices = {...pricesTemp.data, "RLS": 1 / usdtPrice}
-                            const deposits = depositsTemp.filter(item => item.tp === "deposit")
-                            const withdraws = depositsTemp.filter(item => item.tp === "withdraw")
+                            const deposits = depositsTemp.deposits
+                            const withdraws = depositsTemp.withdraws
 
                             let accounts = {}
 
@@ -47,7 +47,7 @@ function getUserExchangeDataRes(req, res)
 
                             const allBalance = accounts.reduce((sum, item) => sum + item.valueInUSDT, 0)
                             const allWithdraws = withdraws.reduce((sum, item) => sum + (item.currency.toUpperCase() === "USDT" ? +item.amount : item.currency.toUpperCase() === "RLS" ? +item.amount / usdtPrice : 0), 0)
-                            const allDeposits = deposits.reduce((sum, item) => sum + (item.currency.toUpperCase() === "USDT" ? +item.amount : item.currency.toUpperCase() === "RLS" ? +item.amount / usdtPrice : 0), 0)
+                            const allDeposits = deposits.reduce((sum, item) => sum + (item.transaction.currency.toUpperCase() === "USDT" ? +item.transaction.amount : item.transaction.currency.toUpperCase() === "RLS" ? +item.transaction.amount / usdtPrice : 0), 0)
                             const allProfitOrShit = allBalance + allWithdraws - allDeposits
                             const allProfitOrShitPercent = (allBalance + allWithdraws) / allDeposits
                             const allProfitOrShitPercentTotal = allProfitOrShitPercent <= 1 ?
@@ -55,7 +55,7 @@ function getUserExchangeDataRes(req, res)
                                 :
                                 (allProfitOrShitPercent - 1) * 100
 
-                            res.send({accounts, prices, allBalance, allProfitOrShit, allProfitOrShitPercentTotal, deposits, withdraws})
+                            res.send({accounts, prices, allBalance, allProfitOrShit, allProfitOrShitPercentTotal})
                         }
                     }
 
@@ -88,42 +88,16 @@ function getUserExchangeDataRes(req, res)
                                 sendRes()
                             })
 
-                        getTransactions({userExchange})
+                        request.get({nobitexUserExchange: userExchange, url: nobitexConstant.deposits})
                             .then(depositsRes =>
                             {
                                 depositsTemp = depositsRes
-                                console.log(depositsRes.filter(item => item.tp === "deposit").length)
-                                console.log(depositsRes.filter(item => item.tp === "withdraw").length)
                                 sendRes()
                             })
                     }
                     else res.status(400).send({message: resConstant.noFound})
                 })
         })
-}
-
-function getTransactions({userExchange})
-{
-    let page = 1
-    let data = []
-
-    function getData(resolve)
-    {
-        request.post({nobitexUserExchange: userExchange, url: nobitexConstant.transactionsHistory, data: {page}})
-            .then(actionsRes =>
-            {
-                data = [...data, ...actionsRes.transactions]
-                if (actionsRes.hasNext)
-                {
-                    page++
-                    getData(resolve)
-                }
-                else resolve(data)
-            })
-            .catch(err => console.log(err?.response?.data))
-    }
-
-    return new Promise(resolve => getData(resolve))
 }
 
 const nobitexController = {
