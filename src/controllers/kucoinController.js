@@ -46,7 +46,7 @@ function getUserExchangeData({userExchange})
                     const available = accounts.reduce((sum, item) => sum + item.availableInUSDT, 0)
                     const profitOrLoss = balance + withdrawsAmount - depositsAmount
                     const profitOrLossTemp = (balance + withdrawsAmount) / depositsAmount
-                    const profitOrLossPercent = profitOrLossTemp <= 1 ? (1 - profitOrLossTemp) * 100 : (profitOrLossTemp - 1) * 100
+                    const profitOrLossPercent = profitOrLossTemp <= 1 ? -(1 - profitOrLossTemp) * 100 : (profitOrLossTemp - 1) * 100
                     return ({accounts, available, balance, profitOrLoss, profitOrLossPercent, withdrawsAmount, depositsAmount, withdraws, deposits})
                 })
         })
