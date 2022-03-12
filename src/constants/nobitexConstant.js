@@ -1,6 +1,6 @@
 const nobitexConstant = {
     getAccounts: "/users/wallets/list",
-    deposits: "/users/wallets/deposits/list",
+    depositsAndWithdraws: "/users/wallets/deposits/list",
     usdtPrice: "/market/stats?srcCurrency=usdt&dstCurrency=rls",
 }
 

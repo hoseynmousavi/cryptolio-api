@@ -33,6 +33,7 @@ function getExchangesRes(req, res)
 }
 
 const exchangeController = {
+    getExchanges,
     addExchangeRes,
     getExchangesRes,
 }

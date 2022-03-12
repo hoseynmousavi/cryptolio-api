@@ -5,8 +5,7 @@ const routeConstant = {
 
     userExchange: "/user-exchange",
 
-    kucoinUserExchangeData: "/kucoin/data/:user_exchange_id",
-    nobitexUserExchangeData: "/nobitex/data/:user_exchange_id",
+    getUserExchangesData: "/user-exchange-data",
 
     userSignup: "/user/signup",
     userLogin: "/user/login",

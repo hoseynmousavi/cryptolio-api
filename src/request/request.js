@@ -3,10 +3,10 @@ import urlMaker from "./urlMaker"
 import kuCoinHeaders from "./kuCoinHeaders"
 import nobitexHeaders from "./nobitexHeaders"
 
-function get({kuCoinUserExchange, nobitexUserExchange, isTelegram, url, param = ""})
+function get({isKucoin, kuCoinUserExchange, nobitexUserExchange, isTelegram, isPrice, url, param = ""})
 {
     return axios.get(
-        urlMaker({isKuCoin: !!kuCoinUserExchange, isTelegram, url, param}),
+        urlMaker({isKuCoin: isKucoin || !!kuCoinUserExchange, isTelegram, isPrice, url, param}),
         {
             headers: kuCoinUserExchange ?
                 kuCoinHeaders({url, method: "GET", userExchange: kuCoinUserExchange})
