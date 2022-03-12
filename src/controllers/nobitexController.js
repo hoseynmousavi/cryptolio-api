@@ -20,15 +20,18 @@ function getUserExchangeData({userExchange})
             for (let i = 0; i < accountsArr.length; i++)
             {
                 const item = accountsArr[i]
-                const currency = item.currency.toUpperCase()
-                if (accounts[currency])
+                if (+item.balance > 0)
                 {
-                    accounts[currency].balance += +item.balance
-                    accounts[currency].available += +item.activeBalance
-                }
-                else
-                {
-                    accounts[currency] = {currency, balance: +item.balance, available: +item.activeBalance}
+                    const currency = item.currency.toUpperCase()
+                    if (accounts[currency])
+                    {
+                        accounts[currency].balance += +item.balance
+                        accounts[currency].available += +item.activeBalance
+                    }
+                    else
+                    {
+                        accounts[currency] = {currency, balance: +item.balance, available: +item.activeBalance}
+                    }
                 }
             }
 
