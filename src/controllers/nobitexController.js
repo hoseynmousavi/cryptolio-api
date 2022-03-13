@@ -58,7 +58,6 @@ function getUserExchangeData({userExchange})
             ])
                 .then(([withdraws, deposits]) =>
                 {
-                    const diagram = countSixMonth({withdraws, deposits})
                     const withdrawsAmount = withdraws.reduce((sum, item) => sum + item.usdtAmount, 0)
                     const depositsAmount = deposits.reduce((sum, item) => sum + item.usdtAmount, 0)
                     const balance = accounts.reduce((sum, item) => sum + item.balanceInUSDT, 0)
@@ -66,6 +65,7 @@ function getUserExchangeData({userExchange})
                     const profitOrLoss = balance + withdrawsAmount - depositsAmount
                     const profitOrLossTemp = (balance + withdrawsAmount) / depositsAmount
                     const profitOrLossPercent = profitOrLossTemp <= 1 ? -(1 - profitOrLossTemp) * 100 : (profitOrLossTemp - 1) * 100
+                    const diagram = countSixMonth({withdraws, deposits, balance})
                     return ({diagram, accounts, available, balance, profitOrLoss, profitOrLossPercent, withdrawsAmount, depositsAmount, withdraws, deposits})
                 })
         })
