@@ -2,6 +2,7 @@ import request from "../request/request"
 import kucoinConstant from "../constants/kucoinConstant"
 import nobitexConstant from "../constants/nobitexConstant"
 import countAllTransfers from "../helpers/countAllTransfers"
+import countSixMonth from "../helpers/countSixMonth"
 
 function getUserExchangeData({userExchange})
 {
@@ -52,17 +53,20 @@ function getUserExchangeData({userExchange})
             accounts = Object.values(accounts).sort((a, b) => b.balanceInUSDT - a.balanceInUSDT)
 
             return Promise.all([
-                countAllTransfers({items: withdraws, field: "amount", usdtPrice}),
-                countAllTransfers({items: deposits, field: "amount", usdtPrice}),
+                countAllTransfers({items: withdraws, usdtPrice}),
+                countAllTransfers({items: deposits, usdtPrice}),
             ])
-                .then(([withdrawsAmount, depositsAmount]) =>
+                .then(([withdraws, deposits]) =>
                 {
+                    const diagram = countSixMonth({withdraws, deposits})
+                    const withdrawsAmount = withdraws.reduce((sum, item) => sum + item.usdtAmount, 0)
+                    const depositsAmount = deposits.reduce((sum, item) => sum + item.usdtAmount, 0)
                     const balance = accounts.reduce((sum, item) => sum + item.balanceInUSDT, 0)
                     const available = accounts.reduce((sum, item) => sum + item.availableInUSDT, 0)
                     const profitOrLoss = balance + withdrawsAmount - depositsAmount
                     const profitOrLossTemp = (balance + withdrawsAmount) / depositsAmount
                     const profitOrLossPercent = profitOrLossTemp <= 1 ? -(1 - profitOrLossTemp) * 100 : (profitOrLossTemp - 1) * 100
-                    return ({accounts, available, balance, profitOrLoss, profitOrLossPercent, withdrawsAmount, depositsAmount, withdraws, deposits})
+                    return ({diagram, accounts, available, balance, profitOrLoss, profitOrLossPercent, withdrawsAmount, depositsAmount, withdraws, deposits})
                 })
         })
 }
