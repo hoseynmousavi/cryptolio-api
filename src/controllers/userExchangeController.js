@@ -41,27 +41,44 @@ function addUserExchangesRes(req, res)
             if (exchange_id && name && user_key)
             {
                 const userExchange = {user_id: _id, exchange_id, name, user_key, user_secret, user_passphrase}
-                (
-                    exchange_id.toString() === "61b4799ee1699274c1a7e360" ?
-                        kucoinController.getUserExchangeData({userExchange})
-                        :
-                        nobitexController.getUserExchangeData({userExchange}),
-                )
-                    .then(data =>
-                    {
-                        addUserExchanges(userExchange)
-                            .then(item => res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data}))
-                            .catch(err =>
-                            {
-                                if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
-                                else res.status(400).send({message: err})
-                            })
-                    })
-                    .catch((err) =>
-                    {
-                        console.log(err)
-                        res.status(400).send({message: resConstant.incorrectData})
-                    })
+                if (exchange_id.toString() === "61b4799ee1699274c1a7e360")
+                {
+                    kucoinController.getUserExchangeData({userExchange})
+                        .then(data =>
+                        {
+                            addUserExchanges(userExchange)
+                                .then(item => res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data}))
+                                .catch(err =>
+                                {
+                                    if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
+                                    else res.status(400).send({message: err})
+                                })
+                        })
+                        .catch((err) =>
+                        {
+                            console.log(err)
+                            res.status(400).send({message: resConstant.incorrectData})
+                        })
+                }
+                else
+                {
+                    nobitexController.getUserExchangeData({userExchange})
+                        .then(data =>
+                        {
+                            addUserExchanges(userExchange)
+                                .then(item => res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data}))
+                                .catch(err =>
+                                {
+                                    if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
+                                    else res.status(400).send({message: err})
+                                })
+                        })
+                        .catch((err) =>
+                        {
+                            console.log(err)
+                            res.status(400).send({message: resConstant.incorrectData})
+                        })
+                }
             }
         })
 }
