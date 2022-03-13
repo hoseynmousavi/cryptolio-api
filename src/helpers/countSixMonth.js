@@ -16,7 +16,7 @@ function countSixMonth({withdraws, deposits})
     for (let i = deposits.length - 1; i >= 0; i--)
     {
         const item = deposits[i]
-        let createdAt = new Date(item.createdAt || item.transaction.created_at).getTime()
+        let createdAt = new Date(item.createdAt).getTime()
         if (createdAt < month6Date) month6Balance += item.usdtAmount
         if (createdAt < month5Date) month5Balance += item.usdtAmount
         if (createdAt < month4Date) month4Balance += item.usdtAmount
@@ -29,7 +29,7 @@ function countSixMonth({withdraws, deposits})
     for (let i = withdraws.length - 1; i >= 0; i--)
     {
         const item = withdraws[i]
-        let createdAt = new Date(item.createdAt || item.transaction.created_at).getTime()
+        let createdAt = new Date(item.createdAt).getTime()
         if (createdAt < month6Date) month6Balance -= item.usdtAmount
         if (createdAt < month5Date) month5Balance -= item.usdtAmount
         if (createdAt < month4Date) month4Balance -= item.usdtAmount

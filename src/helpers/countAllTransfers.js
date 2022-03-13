@@ -8,7 +8,7 @@ function countAllTransfers({items, usdtPrice})
         {
             if (itemsOutput.length === items.length) resolve(itemsOutput.sort((a, b) =>
             {
-                return new Date(b.createdAt || b.transaction.created_at).getTime() - new Date(a.createdAt || a.transaction.created_at).getTime()
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             }))
         }
 
@@ -23,12 +23,12 @@ function countAllTransfers({items, usdtPrice})
 
                 if (currency === "USDT")
                 {
-                    itemsOutput.push({...item, usdtAmount: amount})
+                    itemsOutput.push({currency, amount, createdAt, usdtAmount: amount})
                     checkForResolve()
                 }
                 else if (currency === "RLS")
                 {
-                    itemsOutput.push({...item, usdtAmount: amount / usdtPrice})
+                    itemsOutput.push({currency, amount, createdAt, usdtAmount: amount / usdtPrice})
                     checkForResolve()
                 }
                 else
@@ -39,19 +39,19 @@ function countAllTransfers({items, usdtPrice})
                             const {price} = res || {}
                             if (price)
                             {
-                                itemsOutput.push({...item, usdtAmount: amount * price})
+                                itemsOutput.push({currency, amount, createdAt, usdtAmount: amount * price})
                                 checkForResolve()
                             }
                             else
                             {
-                                itemsOutput.push({...item, usdtAmount: 0})
+                                itemsOutput.push({currency, amount, createdAt, usdtAmount: 0})
                                 checkForResolve()
                                 console.log("NONE PRICE", currency + " " + createdAt)
                             }
                         })
                         .catch(() =>
                         {
-                            itemsOutput.push({...item, usdtAmount: 0})
+                            itemsOutput.push({currency, amount, createdAt, usdtAmount: 0})
                             checkForResolve()
                             console.log("NONE PRICE", currency + " " + createdAt)
                         })
