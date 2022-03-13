@@ -57,7 +57,11 @@ function addUserExchangesRes(req, res)
                                 else res.status(400).send({message: err})
                             })
                     })
-                    .catch(() => res.status(400).send({message: resConstant.incorrectData}))
+                    .catch((err) =>
+                    {
+                        console.log(err?.response?.data)
+                        res.status(400).send({message: resConstant.incorrectData})
+                    })
             }
         })
 }
