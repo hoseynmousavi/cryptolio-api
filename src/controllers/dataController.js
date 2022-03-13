@@ -4,7 +4,6 @@ import userExchangeController from "./userExchangeController"
 import kucoinController from "./kucoinController"
 import nobitexController from "./nobitexController"
 import resConstant from "../constants/resConstant"
-import getBitSixMonth from "../helpers/getBitSixMonth"
 
 function getData(req, res)
 {
@@ -14,9 +13,8 @@ function getData(req, res)
             Promise.all([
                 exchangeController.getExchanges({}),
                 userExchangeController.getUserExchanges({query: {user_id: _id}}),
-                getBitSixMonth(),
             ])
-                .then(([exchanges, userExchanges, bitSixMonth]) =>
+                .then(([exchanges, userExchanges]) =>
                 {
                     Promise.all(
                         userExchanges.map(userExchange =>
@@ -31,7 +29,6 @@ function getData(req, res)
                             res.send({
                                 exchanges,
                                 user_exchanges: userExchanges.map((item, index) => ({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data: values[index]})),
-                                bitSixMonth,
                             })
                         })
                         .catch(() => res.status(400).send({message: resConstant.incorrectData}))
