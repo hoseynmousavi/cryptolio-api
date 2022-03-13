@@ -33,7 +33,7 @@ function countAllTransfers({items, usdtPrice})
                 }
                 else
                 {
-                    request.get({isPrice: true, url: `/price/${currency}/${createdAt}`})
+                    request.get({isPrice: true, url: `/price/${currency}/${createdAt / 1000}`})
                         .then(res =>
                         {
                             const {price} = res || {}

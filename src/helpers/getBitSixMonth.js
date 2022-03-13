@@ -10,12 +10,12 @@ function getBitSixMonth()
     const month6Date = new Date(new Date().setDate(new Date().getDate() - 150)).setHours(0, 0, 0, 0)
 
     return Promise.all([
-        request.get({isPrice: true, url: `/price/BTC/${month1Date}`}),
-        request.get({isPrice: true, url: `/price/BTC/${month2Date}`}),
-        request.get({isPrice: true, url: `/price/BTC/${month3Date}`}),
-        request.get({isPrice: true, url: `/price/BTC/${month4Date}`}),
-        request.get({isPrice: true, url: `/price/BTC/${month5Date}`}),
-        request.get({isPrice: true, url: `/price/BTC/${month6Date}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month1Date / 1000}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month2Date / 1000}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month3Date / 1000}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month4Date / 1000}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month5Date / 1000}`}),
+        request.get({isPrice: true, url: `/price/BTC/${month6Date / 1000}`}),
     ])
         .then(([{price: price1}, {price: price2}, {price: price3}, {price: price4}, {price: price5}, {price: price6}]) =>
         {
