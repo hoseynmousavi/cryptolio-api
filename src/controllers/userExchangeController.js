@@ -2,6 +2,8 @@ import mongoose from "mongoose"
 import userExchangeModel from "../models/userExchangeModel"
 import checkPermission from "../helpers/checkPermission"
 import resConstant from "../constants/resConstant"
+import kucoinController from "./kucoinController"
+import nobitexController from "./nobitexController"
 
 const userExchangeTb = mongoose.model("user-exchange", userExchangeModel)
 
@@ -36,13 +38,27 @@ function addUserExchangesRes(req, res)
         .then(({_id}) =>
         {
             const {exchange_id, name, user_key, user_secret, user_passphrase} = req.body
-            addUserExchanges({user_id: _id, exchange_id, name, user_key, user_secret, user_passphrase})
-                .then(addedUserExchange => res.send(addedUserExchange))
-                .catch(err =>
-                {
-                    if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
-                    else res.status(400).send({message: err})
-                })
+            if (exchange_id && name && user_key)
+            {
+                const userExchange = {user_id: _id, exchange_id, name, user_key, user_secret, user_passphrase}
+                Promise.all(
+                    exchange_id.toString() === "61b4799ee1699274c1a7e360" ?
+                        kucoinController.getUserExchangeData({userExchange})
+                        :
+                        nobitexController.getUserExchangeData({userExchange}),
+                )
+                    .then(values =>
+                    {
+                        addUserExchanges(userExchange)
+                            .then(item => res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data: values[0]}))
+                            .catch(err =>
+                            {
+                                if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
+                                else res.status(400).send({message: err})
+                            })
+                    })
+                    .catch(() => res.status(400).send({message: resConstant.incorrectData}))
+            }
         })
 }
 
