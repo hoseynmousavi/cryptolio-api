@@ -28,7 +28,7 @@ const userExchangeModel = new schema({
             {
                 this.exchange_id === "61b4799ee1699274c1a7e360"
             },
-            "username is required if id is specified",
+            "user_passphrase is required if it is kucoin",
         ],
     },
     user_secret: {
@@ -38,7 +38,7 @@ const userExchangeModel = new schema({
             {
                 this.exchange_id === "61b4799ee1699274c1a7e360"
             },
-            "username is required if id is specified",
+            "user_secret is required if it is kucoin",
         ],
     },
     created_date: {

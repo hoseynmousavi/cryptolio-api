@@ -3,6 +3,10 @@ const routeConstant = {
 
     exchange: "/exchange",
 
+    signal: "/signal",
+
+    notification: "/notification",
+
     userExchange: "/user-exchange",
 
     getUserExchangesData: "/user-exchange-data",

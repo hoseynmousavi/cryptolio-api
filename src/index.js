@@ -6,6 +6,9 @@ import exchangeRouter from "./routes/exchangeRouter"
 import userRouter from "./routes/userRouter"
 import userExchangeRouter from "./routes/userExchangeRouter"
 import dataRouter from "./routes/dataRouter"
+import kucoinController from "./controllers/kucoinController"
+import signalRouter from "./routes/signalRouter"
+import notificationRouter from "./routes/notificationRouter"
 
 const app = express()
 app.use(cors())
@@ -17,7 +20,11 @@ mongoose.connect(data.connectServerDb, {useNewUrlParser: true}).then(() => conso
 
 userExchangeRouter(app)
 exchangeRouter(app)
+notificationRouter(app)
+signalRouter(app)
 userRouter(app)
 dataRouter(app)
+
+kucoinController.startSpotWebsocket()
 
 app.listen(data.port, () => console.log(`server is Now Running on Port ${data.port}`))

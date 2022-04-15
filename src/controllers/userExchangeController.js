@@ -4,6 +4,7 @@ import checkPermission from "../helpers/checkPermission"
 import resConstant from "../constants/resConstant"
 import kucoinController from "./kucoinController"
 import nobitexController from "./nobitexController"
+import userSpotSocket from "../helpers/kucoin/userSpotSocket"
 
 const userExchangeTb = mongoose.model("user-exchange", userExchangeModel)
 
@@ -47,7 +48,11 @@ function addUserExchangesRes(req, res)
                         .then(data =>
                         {
                             addUserExchanges(userExchange)
-                                .then(item => res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data}))
+                                .then(item =>
+                                {
+                                    userSpotSocket.startUserSocket({userExchange: item})
+                                    res.send({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data})
+                                })
                                 .catch(err =>
                                 {
                                     if (err?.keyPattern?.user_id && err?.keyPattern?.name) res.status(400).send({message: resConstant.nameAlreadyExists})
@@ -90,7 +95,11 @@ function deleteUserExchangesRes(req, res)
         {
             const {userExchangeId} = req.body
             removeUserExchanges({query: {_id: userExchangeId, user_id: _id}})
-                .then(() => res.send({message: "OK"}))
+                .then(() =>
+                {
+                    userSpotSocket.closeSocket({userExchangeId})
+                    res.send({message: "OK"})
+                })
                 .catch(err => res.status(400).send({message: err}))
         })
 }
