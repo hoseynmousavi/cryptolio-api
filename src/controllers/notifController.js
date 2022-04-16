@@ -14,7 +14,7 @@ function getNotifRes(req, res)
     checkPermission({req, res})
         .then(({_id}) =>
         {
-            notifTb.find({user_id: _id})
+            notifTb.find({user_id: _id}, null, {sort: "-created_date"})
                 .then(notifications =>
                 {
                     res.send({notifications})
