@@ -6,6 +6,7 @@ function userExchangeRouter(app)
     app.route(routeConstant.userExchange)
         .get(userExchangeController.getUserExchangesRes)
         .post(userExchangeController.addUserExchangesRes)
+        .patch(userExchangeController.toggleDisableSignalRes)
         .delete(userExchangeController.deleteUserExchangesRes)
 }
 

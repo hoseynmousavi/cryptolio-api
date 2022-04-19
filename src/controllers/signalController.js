@@ -18,7 +18,7 @@ function addSignalRes(req, res)
                     .then(addedSignal =>
                     {
                         res.send({message: "OK"})
-                        userExchangeController.getUserExchanges({query: {exchange_id: "61b4799ee1699274c1a7e360"}})
+                        userExchangeController.getUserExchanges({query: {exchange_id: "61b4799ee1699274c1a7e360", is_disable_signal: false}})
                             .then(userExchanges =>
                             {
                                 createSpotEntryOrders({userExchanges, signal: addedSignal})

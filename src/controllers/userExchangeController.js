@@ -23,6 +23,17 @@ function removeUserExchanges({query})
     return userExchangeTb.deleteOne(query)
 }
 
+function toggleDisableSignalRes(req, res)
+{
+    const {is_disable_signal} = req.body
+    checkPermission({req, res})
+        .then(({_id}) =>
+        {
+            userExchangeTb.updateMany({user_id: _id}, {is_disable_signal})
+                .then(() => res.send({message: "ok"}))
+        })
+}
+
 function getUserExchangesRes(req, res)
 {
     checkPermission({req, res})
@@ -107,6 +118,7 @@ function deleteUserExchangesRes(req, res)
 const userExchangeController = {
     getUserExchanges,
     getUserExchangesRes,
+    toggleDisableSignalRes,
     addUserExchangesRes,
     deleteUserExchangesRes,
 }

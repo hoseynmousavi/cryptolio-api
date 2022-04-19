@@ -21,6 +21,10 @@ const userExchangeModel = new schema({
         type: String,
         required: "enter user_key!",
     },
+    is_disable_signal: {
+        type: Boolean,
+        default: false,
+    },
     user_passphrase: {
         type: String,
         required: [
