@@ -27,7 +27,7 @@ function getData(req, res)
                         {
                             res.send({
                                 exchanges,
-                                user_exchanges: userExchanges.map((item, index) => ({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, data: values[index]})),
+                                user_exchanges: userExchanges.map((item, index) => ({_id: item._id, name: item.name, exchange_id: item.exchange_id, created_date: item.created_date, is_disable_signal: item.is_disable_signal, data: values[index]})),
                             })
                         })
                 })
